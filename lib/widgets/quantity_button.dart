@@ -23,7 +23,7 @@ class QuantityButton extends StatelessWidget {
         height: 150,
         width: 130,
         decoration: const BoxDecoration(
-          color: Color.fromRGBO(35, 38, 79, 0.85),
+          color: Color.fromARGB(215, 26, 28, 59),
           borderRadius: BorderRadius.all(
             Radius.circular(20),
           ),
