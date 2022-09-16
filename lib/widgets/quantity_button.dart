@@ -1,40 +1,51 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class QuantityButton extends StatelessWidget {
-  const QuantityButton({Key? key}) : super(key: key);
+  final VoidCallback onPressed;
+  final AssetImage icon;
+  final String quantityName;
+  final Color textColor;
+
+  const QuantityButton({
+    Key? key,
+    required this.icon,
+    required this.quantityName,
+    required this.textColor,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
       pressedOpacity: 0.9,
-      onPressed: () {},
+      onPressed: onPressed,
       child: Container(
         height: 150,
         width: 130,
         decoration: const BoxDecoration(
-          color: Color.fromRGBO(40, 42, 92, 0.8),
+          color: Color.fromRGBO(35, 38, 79, 0.85),
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
         ),
         child: Column(
-          children: const [
+          children: [
             Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 top: 25,
-                bottom: 20,
+                bottom: 23,
               ),
               child: Image(
-                height: 60,
-                width: 60,
-                image: AssetImage(
-                  "assets/icons/area.png",
-                ),
+                height: 65,
+                width: 65,
+                image: icon,
               ),
             ),
             Text(
-              "Area",
+              quantityName,
               style: TextStyle(
-                fontSize: 25,
-                color: Colors.white,
+                fontSize: 22,
+                color: textColor,
               ),
             ),
           ],
