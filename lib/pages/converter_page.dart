@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:unitconverter/data.dart';
 
+import '../widgets/numpad_button.dart';
+
 class ConverterPage extends StatefulWidget {
   final String quantityName;
 
@@ -19,10 +21,29 @@ class _ConverterPageState extends State<ConverterPage> {
   int _listIndex2 = 0;
 
   String _textFieldText = "";
+  String _resultFieldText = "";
 
-  void _numkeyPressed() {
+  void _numkeyPressed(String digit) {
     setState(() {
-      _textFieldText += "1";
+      if (_textFieldText.length < 10) {
+        _textFieldText += digit;
+      }
+      _resultFieldText = (num.parse(_textFieldText) * 2).toString();
+    });
+  }
+
+  void _backspacePressed() {
+    setState(() {
+      if (_textFieldText.isNotEmpty) {
+        _textFieldText = _textFieldText.substring(0, _textFieldText.length - 1);
+      }
+      if (_textFieldText.substring(0) == "0") {
+        _textFieldText = "";
+      }
+
+      _resultFieldText = (_textFieldText.isNotEmpty)
+          ? (num.parse(_textFieldText) * 2).toString()
+          : "";
     });
   }
 
@@ -53,6 +74,7 @@ class _ConverterPageState extends State<ConverterPage> {
     Data data = Data(quantityName: quantityName);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         constraints: const BoxConstraints.expand(),
         decoration: BoxDecoration(
@@ -85,7 +107,7 @@ class _ConverterPageState extends State<ConverterPage> {
                     child: Text(
                       _textFieldText,
                       style: TextStyle(
-                        fontSize: 70,
+                        fontSize: (_textFieldText.length < 11) ? 70 : 55,
                         color: data.quantityNameColor(),
                       ),
                     ),
@@ -136,7 +158,7 @@ class _ConverterPageState extends State<ConverterPage> {
                       children: [
                         Center(
                           child: Text(
-                            "data",
+                            _resultFieldText,
                             style: TextStyle(
                               fontSize: 70,
                               color: data.quantityNameColor(),
@@ -204,14 +226,20 @@ class _ConverterPageState extends State<ConverterPage> {
                                 children: [
                                   NumpadButton(
                                     number: 1,
-                                    buttonClicked: _numkeyPressed,
+                                    buttonClicked: () {
+                                      _numkeyPressed("1");
+                                    },
                                   ),
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed("2");
+                                    },
                                     number: 2,
                                   ),
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed("3");
+                                    },
                                     number: 3,
                                   ),
                                 ],
@@ -221,15 +249,21 @@ class _ConverterPageState extends State<ConverterPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed("4");
+                                    },
                                     number: 4,
                                   ),
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed("5");
+                                    },
                                     number: 5,
                                   ),
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed("6");
+                                    },
                                     number: 6,
                                   ),
                                 ],
@@ -239,15 +273,21 @@ class _ConverterPageState extends State<ConverterPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed('7');
+                                    },
                                     number: 7,
                                   ),
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed("8");
+                                    },
                                     number: 8,
                                   ),
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      _numkeyPressed("9");
+                                    },
                                     number: 9,
                                   ),
                                 ],
@@ -268,11 +308,23 @@ class _ConverterPageState extends State<ConverterPage> {
                                           fontSize: 22,
                                         ),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        if (!_textFieldText.contains('.') &&
+                                            _textFieldText.isEmpty) {
+                                          _numkeyPressed("0.");
+                                        }
+                                        if (!_textFieldText.contains('.')) {
+                                          _numkeyPressed(".");
+                                        }
+                                      },
                                     ),
                                   ),
                                   NumpadButton(
-                                    buttonClicked: () {},
+                                    buttonClicked: () {
+                                      if (_textFieldText.isNotEmpty) {
+                                        _numkeyPressed("0");
+                                      }
+                                    },
                                     number: 0,
                                   ),
                                   SizedBox(
@@ -284,7 +336,9 @@ class _ConverterPageState extends State<ConverterPage> {
                                         color: CupertinoColors.white,
                                         size: 22,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _backspacePressed();
+                                      },
                                     ),
                                   ),
                                 ],
@@ -298,40 +352,6 @@ class _ConverterPageState extends State<ConverterPage> {
                 ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class NumpadButton extends StatelessWidget {
-  final dynamic number;
-  final VoidCallback buttonClicked;
-
-  const NumpadButton({
-    Key? key,
-    required this.number,
-    required this.buttonClicked,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 118,
-      child: Padding(
-        padding: const EdgeInsets.all(3.0),
-        child: CupertinoButton(
-          padding: const EdgeInsets.all(0),
-          color: CupertinoColors.systemGrey.highContrastColor,
-          onPressed: buttonClicked,
-          child: Text(
-            number.toString(),
-            style: const TextStyle(
-              color: CupertinoColors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: 22,
-            ),
           ),
         ),
       ),
