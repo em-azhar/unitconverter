@@ -1,57 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-const List<String> _area = [
-  "Square Kilometer",
-  "Square Meter",
-  "Square Mile",
-  "Square Yard",
-  "Square Foot",
-  "Square Inch",
-  "Hectare",
-  "Acre",
-];
-const List<String> _time = [
-  "Millisecond",
-  "Second",
-  "Minute",
-  "Hour",
-  "Day",
-  "Week",
-];
-const List<String> _volume = [
-  "Cubic Meter",
-  "Cubic Centimeter",
-  "Mililiter",
-  "Liter",
-];
-
-const List<String> _temperature = [
-  "Celcius",
-  "Fahrenheit",
-  "Kelvin",
-];
-
-const List<String> _length = [
-  "Kilometer",
-  "Meter",
-  "Centimeter",
-  "Millimeter",
-  "Mile",
-  "Yard",
-  "Foot",
-  "Inch",
-];
-
-const List<String> _speed = [
-  "Meter per second",
-  "Kilometer per hour",
-  "Miles per hour",
-  "Knot",
-];
+import 'package:unitconverter/data.dart';
 
 class ConverterPage extends StatefulWidget {
   final String quantityName;
+
   const ConverterPage({
     Key? key,
     required this.quantityName,
@@ -62,7 +15,17 @@ class ConverterPage extends StatefulWidget {
 }
 
 class _ConverterPageState extends State<ConverterPage> {
-  int _listIndex = 0;
+  int _listIndex1 = 0;
+  int _listIndex2 = 0;
+
+  String _textFieldText = "";
+
+  void _numkeyPressed() {
+    setState(() {
+      _textFieldText += "1";
+    });
+  }
+
   void _showSlider(Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
@@ -86,39 +49,8 @@ class _ConverterPageState extends State<ConverterPage> {
   @override
   Widget build(BuildContext context) {
     final String quantityName = widget.quantityName;
-    int length = (quantityName == "Area")
-        ? _area.length
-        : (quantityName == "Time")
-            ? _time.length
-            : (quantityName == "Volume")
-                ? _volume.length
-                : (quantityName == "Temperature")
-                    ? _temperature.length
-                    : (quantityName == "Length")
-                        ? _length.length
-                        : _speed.length;
-    List<String> list = (quantityName == "Area")
-        ? _area
-        : (quantityName == "Time")
-            ? _time
-            : (quantityName == "Volume")
-                ? _volume
-                : (quantityName == "Temperature")
-                    ? _temperature
-                    : (quantityName == "Length")
-                        ? _length
-                        : _speed;
-    String background = (quantityName == "Area")
-        ? "area"
-        : (quantityName == "Time")
-            ? "time"
-            : (quantityName == "Volume")
-                ? "volume"
-                : (quantityName == "Temperature")
-                    ? "temperature"
-                    : (quantityName == "Length")
-                        ? "length"
-                        : "speed";
+
+    Data data = Data(quantityName: quantityName);
 
     return Scaffold(
       body: Container(
@@ -126,51 +58,280 @@ class _ConverterPageState extends State<ConverterPage> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              "assets/converterpage_backgrounds/$background.png",
+              "assets/converterpage_backgrounds/${data.background()}.png",
             ),
             fit: BoxFit.cover,
           ),
         ),
         child: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 14, right: 14, top: 25, bottom: 60),
+                child: Text(
+                  data.quantityName,
+                  style: TextStyle(
+                    fontSize: 65,
+                    color: data.quantityNameColor(),
+                  ),
+                ),
+              ),
+              Column(
                 children: [
-                  Text(quantityName),
-                  CupertinoButton(
-                    onPressed: () => _showSlider(
-                      CupertinoPicker(
-                        itemExtent: 45,
-                        onSelectedItemChanged: (int selectedItem) {
-                          setState(
-                            () {
-                              _listIndex = selectedItem;
-                            },
-                          );
-                        },
-                        children: List<Widget>.generate(
-                          length,
-                          (int index) {
-                            return Center(
-                              child: Text(
-                                list[index],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
+                  Center(
+                    child: Text(
+                      _textFieldText,
+                      style: TextStyle(
+                        fontSize: 70,
+                        color: data.quantityNameColor(),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: CupertinoButton(
+                      onPressed: () => _showSlider(
+                        CupertinoPicker(
+                          itemExtent: 45,
+                          onSelectedItemChanged: (int selectedItem) {
+                            setState(
+                              () {
+                                _listIndex1 = selectedItem;
+                              },
                             );
                           },
+                          children: List<Widget>.generate(
+                            data.length(),
+                            (int index) {
+                              return Center(
+                                child: Text(
+                                  data.list()[index],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        data.list()[_listIndex1],
+                        style: const TextStyle(
+                          color: Colors.white,
                         ),
                       ),
                     ),
-                    child: Text(
-                      list[_listIndex],
-                    ),
                   ),
                 ],
-              )
+              ),
+              const Divider(),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            "data",
+                            style: TextStyle(
+                              fontSize: 70,
+                              color: data.quantityNameColor(),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: CupertinoButton(
+                            onPressed: () => _showSlider(
+                              CupertinoPicker(
+                                itemExtent: 45,
+                                onSelectedItemChanged: (int selectedItem) {
+                                  setState(
+                                    () {
+                                      _listIndex2 = selectedItem;
+                                    },
+                                  );
+                                },
+                                children: List<Widget>.generate(
+                                  data.length(),
+                                  (int index) {
+                                    return Center(
+                                      child: Text(
+                                        data.list()[index],
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              data.list()[_listIndex2],
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Stack(
+                      children: [
+                        Container(
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: CupertinoColors
+                                .tertiarySystemGroupedBackground.darkColor,
+                            border: Border.all(
+                              width: 0,
+                              color: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30, top: 10),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  NumpadButton(
+                                    number: 1,
+                                    buttonClicked: _numkeyPressed,
+                                  ),
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 2,
+                                  ),
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 3,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 4,
+                                  ),
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 5,
+                                  ),
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 6,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 7,
+                                  ),
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 8,
+                                  ),
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 9,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 123,
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: const Text(
+                                        ".",
+                                        style: TextStyle(
+                                          color: CupertinoColors.white,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 22,
+                                        ),
+                                      ),
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                  NumpadButton(
+                                    buttonClicked: () {},
+                                    number: 0,
+                                  ),
+                                  SizedBox(
+                                    width: 123,
+                                    child: CupertinoButton(
+                                      padding: const EdgeInsets.all(3.0),
+                                      child: const Icon(
+                                        CupertinoIcons.delete_left,
+                                        color: CupertinoColors.white,
+                                        size: 22,
+                                      ),
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NumpadButton extends StatelessWidget {
+  final dynamic number;
+  final VoidCallback buttonClicked;
+
+  const NumpadButton({
+    Key? key,
+    required this.number,
+    required this.buttonClicked,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 118,
+      child: Padding(
+        padding: const EdgeInsets.all(3.0),
+        child: CupertinoButton(
+          padding: const EdgeInsets.all(0),
+          color: CupertinoColors.systemGrey.highContrastColor,
+          onPressed: buttonClicked,
+          child: Text(
+            number.toString(),
+            style: const TextStyle(
+              color: CupertinoColors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 22,
+            ),
           ),
         ),
       ),
