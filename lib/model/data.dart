@@ -4,9 +4,6 @@ const List<String> _area = [
   "Square Kilometer",
   "Square Meter",
   "Square Mile",
-  "Square Yard",
-  "Square Foot",
-  "Square Inch",
   "Hectare",
   "Acre",
 ];
@@ -27,7 +24,7 @@ const List<String> _volume = [
 
 const List<String> _temperature = [
   "Celcius",
-  "Fahrenheit",
+  "Fahreinheit",
   "Kelvin",
 ];
 

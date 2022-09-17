@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:unitconverter/data.dart';
+import 'package:unitconverter/calculations/conversion.dart';
+import 'package:unitconverter/model/data.dart';
 
 import '../widgets/numpad_button.dart';
 
@@ -23,16 +24,20 @@ class _ConverterPageState extends State<ConverterPage> {
   String _textFieldText = "";
   String _resultFieldText = "";
 
-  void _numkeyPressed(String digit) {
+  String _result = "";
+  void _numkeyPressed(String digit, String toBeConvertedUnit,
+      String convertedUnit, String quantityName) {
     setState(() {
       if (_textFieldText.length < 10) {
         _textFieldText += digit;
       }
-      _resultFieldText = (num.parse(_textFieldText) * 2).toString();
+      _resultFieldText =
+          _convert(toBeConvertedUnit, convertedUnit, quantityName);
     });
   }
 
-  void _backspacePressed() {
+  void _backspacePressed(
+      String toBeConvertedUnit, String convertedUnit, String quantityName) {
     setState(() {
       if (_textFieldText.isNotEmpty) {
         _textFieldText = _textFieldText.substring(0, _textFieldText.length - 1);
@@ -42,9 +47,22 @@ class _ConverterPageState extends State<ConverterPage> {
       }
 
       _resultFieldText = (_textFieldText.isNotEmpty)
-          ? (num.parse(_textFieldText) * 2).toString()
+          ? _convert(toBeConvertedUnit, convertedUnit, quantityName)
           : "";
     });
+  }
+
+  final Conversion _conversion = Conversion();
+
+  String _convert(
+      String toBeConvertedUnit, String convertedUnit, String quantityName) {
+    setState(() {
+      _result = _conversion
+          .areaResult(num.parse(_textFieldText), toBeConvertedUnit,
+              convertedUnit, quantityName)
+          .toString();
+    });
+    return _result;
   }
 
   void _showSlider(Widget child) {
@@ -91,8 +109,19 @@ class _ConverterPageState extends State<ConverterPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: CupertinoButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      CupertinoIcons.back,
+                      color: Colors.white,
+                    ),
+                  )),
+              Padding(
                 padding: const EdgeInsets.only(
-                    left: 14, right: 14, top: 25, bottom: 60),
+                    left: 30, right: 14, top: 15, bottom: 60),
                 child: Text(
                   data.quantityName,
                   style: TextStyle(
@@ -101,111 +130,121 @@ class _ConverterPageState extends State<ConverterPage> {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  Center(
-                    child: Text(
-                      _textFieldText,
-                      style: TextStyle(
-                        fontSize: (_textFieldText.length < 11) ? 70 : 55,
-                        color: data.quantityNameColor(),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Text(
+                        _textFieldText,
+                        style: TextStyle(
+                          fontSize: (_textFieldText.length < 11) ? 60 : 55,
+                          color: data.quantityNameColor(),
+                        ),
                       ),
                     ),
-                  ),
-                  Center(
-                    child: CupertinoButton(
-                      onPressed: () => _showSlider(
-                        CupertinoPicker(
-                          itemExtent: 45,
-                          onSelectedItemChanged: (int selectedItem) {
-                            setState(
-                              () {
-                                _listIndex1 = selectedItem;
-                              },
-                            );
-                          },
-                          children: List<Widget>.generate(
-                            data.length(),
-                            (int index) {
-                              return Center(
-                                child: Text(
-                                  data.list()[index],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
+                    Center(
+                      child: CupertinoButton(
+                        onPressed: () => _showSlider(
+                          CupertinoPicker(
+                            itemExtent: 45,
+                            onSelectedItemChanged: (int selectedItem) {
+                              setState(
+                                () {
+                                  _listIndex1 = selectedItem;
+                                },
                               );
                             },
+                            children: List<Widget>.generate(
+                              data.length(),
+                              (int index) {
+                                return Center(
+                                  child: Text(
+                                    data.list()[index],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          data.list()[_listIndex1],
+                          style: const TextStyle(
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                      child: Text(
-                        data.list()[_listIndex1],
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const Divider(),
+              const Divider(
+                thickness: 2,
+                height: 80,
+              ),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            _resultFieldText,
-                            style: TextStyle(
-                              fontSize: 70,
-                              color: data.quantityNameColor(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Text(
+                              _resultFieldText,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 60,
+                                color: data.quantityNameColor(),
+                              ),
                             ),
                           ),
-                        ),
-                        Center(
-                          child: CupertinoButton(
-                            onPressed: () => _showSlider(
-                              CupertinoPicker(
-                                itemExtent: 45,
-                                onSelectedItemChanged: (int selectedItem) {
-                                  setState(
-                                    () {
-                                      _listIndex2 = selectedItem;
-                                    },
-                                  );
-                                },
-                                children: List<Widget>.generate(
-                                  data.length(),
-                                  (int index) {
-                                    return Center(
-                                      child: Text(
-                                        data.list()[index],
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                          Center(
+                            child: CupertinoButton(
+                              onPressed: () => _showSlider(
+                                CupertinoPicker(
+                                  itemExtent: 45,
+                                  onSelectedItemChanged: (int selectedItem) {
+                                    setState(
+                                      () {
+                                        _listIndex2 = selectedItem;
+                                      },
                                     );
                                   },
+                                  children: List<Widget>.generate(
+                                    data.length(),
+                                    (int index) {
+                                      return Center(
+                                        child: Text(
+                                          data.list()[index],
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                data.list()[_listIndex2],
+                                style: const TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
-                            child: Text(
-                              data.list()[_listIndex2],
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Stack(
                       children: [
                         Container(
-                          height: 250,
+                          height: 230,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             color: CupertinoColors
@@ -217,7 +256,7 @@ class _ConverterPageState extends State<ConverterPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 30, top: 10),
+                          padding: const EdgeInsets.only(top: 20),
                           child: Column(
                             children: [
                               Row(
@@ -227,18 +266,33 @@ class _ConverterPageState extends State<ConverterPage> {
                                   NumpadButton(
                                     number: 1,
                                     buttonClicked: () {
-                                      _numkeyPressed("1");
+                                      _numkeyPressed(
+                                        "1",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                   ),
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed("2");
+                                      _numkeyPressed(
+                                        "2",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 2,
                                   ),
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed("3");
+                                      _numkeyPressed(
+                                        "3",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 3,
                                   ),
@@ -250,19 +304,34 @@ class _ConverterPageState extends State<ConverterPage> {
                                 children: [
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed("4");
+                                      _numkeyPressed(
+                                        "4",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 4,
                                   ),
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed("5");
+                                      _numkeyPressed(
+                                        "5",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 5,
                                   ),
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed("6");
+                                      _numkeyPressed(
+                                        "6",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 6,
                                   ),
@@ -274,19 +343,34 @@ class _ConverterPageState extends State<ConverterPage> {
                                 children: [
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed('7');
+                                      _numkeyPressed(
+                                        '7',
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 7,
                                   ),
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed("8");
+                                      _numkeyPressed(
+                                        "8",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 8,
                                   ),
                                   NumpadButton(
                                     buttonClicked: () {
-                                      _numkeyPressed("9");
+                                      _numkeyPressed(
+                                        "9",
+                                        data.list()[_listIndex1],
+                                        data.list()[_listIndex2],
+                                        data.quantityName,
+                                      );
                                     },
                                     number: 9,
                                   ),
@@ -311,10 +395,20 @@ class _ConverterPageState extends State<ConverterPage> {
                                       onPressed: () {
                                         if (!_textFieldText.contains('.') &&
                                             _textFieldText.isEmpty) {
-                                          _numkeyPressed("0.");
+                                          _numkeyPressed(
+                                            "0.",
+                                            data.list()[_listIndex1],
+                                            data.list()[_listIndex2],
+                                            data.quantityName,
+                                          );
                                         }
                                         if (!_textFieldText.contains('.')) {
-                                          _numkeyPressed(".");
+                                          _numkeyPressed(
+                                            ".",
+                                            data.list()[_listIndex1],
+                                            data.list()[_listIndex2],
+                                            data.quantityName,
+                                          );
                                         }
                                       },
                                     ),
@@ -322,7 +416,12 @@ class _ConverterPageState extends State<ConverterPage> {
                                   NumpadButton(
                                     buttonClicked: () {
                                       if (_textFieldText.isNotEmpty) {
-                                        _numkeyPressed("0");
+                                        _numkeyPressed(
+                                          "0",
+                                          data.list()[_listIndex1],
+                                          data.list()[_listIndex2],
+                                          data.quantityName,
+                                        );
                                       }
                                     },
                                     number: 0,
@@ -337,7 +436,11 @@ class _ConverterPageState extends State<ConverterPage> {
                                         size: 22,
                                       ),
                                       onPressed: () {
-                                        _backspacePressed();
+                                        _backspacePressed(
+                                          data.list()[_listIndex1],
+                                          data.list()[_listIndex2],
+                                          data.quantityName,
+                                        );
                                       },
                                     ),
                                   ),
