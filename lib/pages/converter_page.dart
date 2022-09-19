@@ -162,9 +162,9 @@ class _ConverterPageState extends State<ConverterPage> {
                     left: 30, right: 14, top: 15, bottom: 60),
                 child: Text(
                   data.quantityName,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 65,
-                    color: data.quantityNameColor(),
+                    color: Colors.white,
                   ),
                 ),
               ),

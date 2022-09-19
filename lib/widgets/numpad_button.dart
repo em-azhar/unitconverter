@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:soundpool/soundpool.dart';
 
 class NumpadButton extends StatelessWidget {
   final dynamic number;
@@ -19,7 +21,16 @@ class NumpadButton extends StatelessWidget {
         child: CupertinoButton(
           padding: const EdgeInsets.all(0),
           color: CupertinoColors.systemGrey.highContrastColor,
-          onPressed: buttonClicked,
+          onPressed: () async {
+            Soundpool pool = Soundpool(streamType: StreamType.notification);
+            int soundId = await rootBundle
+                .load("audio/keyPress.wav")
+                .then((ByteData soundData) {
+              return pool.load(soundData);
+            });
+            int streamId = await pool.play(soundId);
+            buttonClicked();
+          },
           child: Text(
             number.toString(),
             style: const TextStyle(

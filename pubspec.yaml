@@ -37,6 +37,7 @@ dependencies:
   flutter_launcher_icons: ^0.10.0
   url_launcher: ^6.1.5
   font_awesome_flutter: ^10.2.1
+  soundpool: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -65,3 +66,4 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/converterpage_backgrounds/
+    - assets/audio/
