@@ -13,11 +13,9 @@ const List<String> _time = [
   "Minute",
   "Hour",
   "Day",
-  "Week",
 ];
 const List<String> _volume = [
   "Cubic Meter",
-  "Cubic Centimeter",
   "Mililiter",
   "Liter",
 ];

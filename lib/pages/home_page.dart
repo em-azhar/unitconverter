@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:unitconverter/pages/converter_page.dart';
+import 'package:unitconverter/pages/credit.dart';
 import 'package:unitconverter/widgets/quantity_button.dart';
 
 class Home extends StatefulWidget {
@@ -31,21 +32,48 @@ class _HomeState extends State<Home> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Unit Converter",
-                  style: TextStyle(
-                    fontSize: 35,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Text(
-                  "Convert units on the go.",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: const [
+                        Text(
+                          "Unit Converter",
+                          style: TextStyle(
+                            fontSize: 35,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "Convert units on the go.",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: CupertinoButton(
+                        child: const Icon(
+                          CupertinoIcons.info,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => Credit(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: Padding(
@@ -120,7 +148,6 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                 );
-                                
                               },
                             ),
                           ],

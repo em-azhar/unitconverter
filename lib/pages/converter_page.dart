@@ -18,8 +18,18 @@ class ConverterPage extends StatefulWidget {
 }
 
 class _ConverterPageState extends State<ConverterPage> {
+  late FixedExtentScrollController scrollController1;
+  late FixedExtentScrollController scrollController2;
+
   int _listIndex1 = 0;
-  int _listIndex2 = 0;
+  int _listIndex2 = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController1 = FixedExtentScrollController(initialItem: _listIndex1);
+    scrollController2 = FixedExtentScrollController(initialItem: _listIndex2);
+  }
 
   String _textFieldText = "";
   String _resultFieldText = "";
@@ -31,8 +41,10 @@ class _ConverterPageState extends State<ConverterPage> {
       if (_textFieldText.length < 10) {
         _textFieldText += digit;
       }
-      _resultFieldText =
-          _convert(toBeConvertedUnit, convertedUnit, quantityName);
+      if (_textFieldText.isNotEmpty && _textFieldText != "-") {
+        _resultFieldText =
+            _convert(toBeConvertedUnit, convertedUnit, quantityName);
+      }
     });
   }
 
@@ -46,9 +58,13 @@ class _ConverterPageState extends State<ConverterPage> {
         _textFieldText = "";
       }
 
-      _resultFieldText = (_textFieldText.isNotEmpty)
-          ? _convert(toBeConvertedUnit, convertedUnit, quantityName)
-          : "";
+      if (_textFieldText != "-") {
+        _resultFieldText = (_textFieldText.isNotEmpty)
+            ? _convert(toBeConvertedUnit, convertedUnit, quantityName)
+            : "";
+      } else if (_textFieldText == "-") {
+        _resultFieldText = "";
+      }
     });
   }
 
@@ -58,7 +74,7 @@ class _ConverterPageState extends State<ConverterPage> {
       String toBeConvertedUnit, String convertedUnit, String quantityName) {
     setState(() {
       _result = _conversion
-          .areaResult(num.parse(_textFieldText), toBeConvertedUnit,
+          .conversionResult(num.parse(_textFieldText), toBeConvertedUnit,
               convertedUnit, quantityName)
           .toString();
     });
@@ -68,21 +84,43 @@ class _ConverterPageState extends State<ConverterPage> {
   void _showSlider(Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
-      builder: (BuildContext context) => Container(
-        height: 216,
-        padding: const EdgeInsets.only(top: 6.0),
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        color: CupertinoColors.systemBackground.resolveFrom(
-          context,
-        ),
-        child: SafeArea(
-          top: false,
-          child: child,
+      builder: (context) => CupertinoActionSheet(
+        actions: [
+          Container(
+            height: 216,
+            padding: const EdgeInsets.only(top: 6.0),
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            color: CupertinoColors.systemBackground.resolveFrom(
+              context,
+            ),
+            child: SafeArea(
+              top: false,
+              child: child,
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: (() {
+            Navigator.pop(context);
+          }),
+          child: const Text(
+            "Cancel",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController1.dispose();
+    scrollController2.dispose();
+    super.dispose();
   }
 
   @override
@@ -145,31 +183,43 @@ class _ConverterPageState extends State<ConverterPage> {
                     ),
                     Center(
                       child: CupertinoButton(
-                        onPressed: () => _showSlider(
-                          CupertinoPicker(
-                            itemExtent: 45,
-                            onSelectedItemChanged: (int selectedItem) {
-                              setState(
-                                () {
+                        onPressed: () {
+                          scrollController1.dispose();
+                          scrollController1 = FixedExtentScrollController(
+                            initialItem: _listIndex1,
+                          );
+                          _showSlider(
+                            CupertinoPicker(
+                              looping: true,
+                              itemExtent: 45,
+                              scrollController: scrollController1,
+                              onSelectedItemChanged: (int selectedItem) {
+                                setState(() {
+                                  _numkeyPressed(
+                                    "",
+                                    data.list()[selectedItem],
+                                    data.list()[_listIndex2],
+                                    data.quantityName,
+                                  );
                                   _listIndex1 = selectedItem;
-                                },
-                              );
-                            },
-                            children: List<Widget>.generate(
-                              data.length(),
-                              (int index) {
-                                return Center(
-                                  child: Text(
-                                    data.list()[index],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                );
+                                });
                               },
+                              children: List<Widget>.generate(
+                                data.length(),
+                                (int index) {
+                                  return Center(
+                                    child: Text(
+                                      data.list()[index],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                         child: Text(
                           data.list()[_listIndex1],
                           style: const TextStyle(
@@ -205,31 +255,42 @@ class _ConverterPageState extends State<ConverterPage> {
                           ),
                           Center(
                             child: CupertinoButton(
-                              onPressed: () => _showSlider(
-                                CupertinoPicker(
-                                  itemExtent: 45,
-                                  onSelectedItemChanged: (int selectedItem) {
-                                    setState(
-                                      () {
+                              onPressed: () {
+                                scrollController2.dispose();
+                                scrollController2 = FixedExtentScrollController(
+                                    initialItem: _listIndex2);
+                                _showSlider(
+                                  CupertinoPicker(
+                                    scrollController: scrollController2,
+                                    looping: true,
+                                    itemExtent: 45,
+                                    onSelectedItemChanged: (int selectedItem) {
+                                      setState(() {
+                                        _numkeyPressed(
+                                          "",
+                                          data.list()[_listIndex1],
+                                          data.list()[selectedItem],
+                                          data.quantityName,
+                                        );
                                         _listIndex2 = selectedItem;
-                                      },
-                                    );
-                                  },
-                                  children: List<Widget>.generate(
-                                    data.length(),
-                                    (int index) {
-                                      return Center(
-                                        child: Text(
-                                          data.list()[index],
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      );
+                                      });
                                     },
+                                    children: List<Widget>.generate(
+                                      data.length(),
+                                      (int index) {
+                                        return Center(
+                                          child: Text(
+                                            data.list()[index],
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                               child: Text(
                                 data.list()[_listIndex2],
                                 style: const TextStyle(
@@ -382,35 +443,49 @@ class _ConverterPageState extends State<ConverterPage> {
                                 children: [
                                   SizedBox(
                                     width: 123,
-                                    child: CupertinoButton(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: const Text(
-                                        ".",
-                                        style: TextStyle(
-                                          color: CupertinoColors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 22,
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        if (!_textFieldText.contains('.') &&
-                                            _textFieldText.isEmpty) {
+                                    child: GestureDetector(
+                                      onLongPress: () {
+                                        if (_textFieldText.isEmpty &&
+                                            quantityName == "Temperature") {
                                           _numkeyPressed(
-                                            "0.",
-                                            data.list()[_listIndex1],
-                                            data.list()[_listIndex2],
-                                            data.quantityName,
-                                          );
-                                        }
-                                        if (!_textFieldText.contains('.')) {
-                                          _numkeyPressed(
-                                            ".",
+                                            "-",
                                             data.list()[_listIndex1],
                                             data.list()[_listIndex2],
                                             data.quantityName,
                                           );
                                         }
                                       },
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          (quantityName == "Temperature")
+                                              ? "./-"
+                                              : ".",
+                                          style: const TextStyle(
+                                            color: CupertinoColors.white,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 22,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          if (_textFieldText.isEmpty) {
+                                            _numkeyPressed(
+                                              "0.",
+                                              data.list()[_listIndex1],
+                                              data.list()[_listIndex2],
+                                              data.quantityName,
+                                            );
+                                          }
+                                          if (!_textFieldText.contains('.')) {
+                                            _numkeyPressed(
+                                              ".",
+                                              data.list()[_listIndex1],
+                                              data.list()[_listIndex2],
+                                              data.quantityName,
+                                            );
+                                          }
+                                        },
+                                      ),
                                     ),
                                   ),
                                   NumpadButton(

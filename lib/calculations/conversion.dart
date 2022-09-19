@@ -1,7 +1,7 @@
 import 'dart:math';
 
 class Conversion {
-  num areaResult(num value, String toBeConvertedUnit, String convertedUnit,
+  num conversionResult(num value, String toBeConvertedUnit, String convertedUnit,
       String quantityName) {
     num result = 0;
 
