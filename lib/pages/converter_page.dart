@@ -7,10 +7,12 @@ import '../widgets/numpad_button.dart';
 
 class ConverterPage extends StatefulWidget {
   final String quantityName;
+  final bool dark;
 
   const ConverterPage({
     Key? key,
     required this.quantityName,
+    required this.dark,
   }) : super(key: key);
 
   @override
@@ -105,10 +107,10 @@ class _ConverterPageState extends State<ConverterPage> {
           onPressed: (() {
             Navigator.pop(context);
           }),
-          child: const Text(
+          child: Text(
             "Cancel",
             style: TextStyle(
-              color: Colors.white,
+              color: widget.dark ? Colors.white : Colors.black,
             ),
           ),
         ),
@@ -126,7 +128,7 @@ class _ConverterPageState extends State<ConverterPage> {
   @override
   Widget build(BuildContext context) {
     final String quantityName = widget.quantityName;
-
+    bool dark = widget.dark;
     Data data = Data(quantityName: quantityName);
 
     return Scaffold(
@@ -136,7 +138,7 @@ class _ConverterPageState extends State<ConverterPage> {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              "assets/converterpage_backgrounds/${data.background()}.png",
+              "assets/converterpage_backgrounds${dark ? "_dark" : "_light"}/${data.background()}.png",
             ),
             fit: BoxFit.cover,
           ),
@@ -152,9 +154,9 @@ class _ConverterPageState extends State<ConverterPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Icon(
+                    child: Icon(
                       CupertinoIcons.back,
-                      color: Colors.white,
+                      color: dark ? Colors.white : Colors.black,
                     ),
                   )),
               Padding(
@@ -162,9 +164,9 @@ class _ConverterPageState extends State<ConverterPage> {
                     left: 30, right: 14, top: 15, bottom: 60),
                 child: Text(
                   data.quantityName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 65,
-                    color: Colors.white,
+                    color: dark ? Colors.white : Colors.black,
                   ),
                 ),
               ),
@@ -210,8 +212,9 @@ class _ConverterPageState extends State<ConverterPage> {
                                   return Center(
                                     child: Text(
                                       data.list()[index],
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color:
+                                            dark ? Colors.white : Colors.black,
                                       ),
                                     ),
                                   );
@@ -222,8 +225,8 @@ class _ConverterPageState extends State<ConverterPage> {
                         },
                         child: Text(
                           data.list()[_listIndex1],
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: dark ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
@@ -234,7 +237,8 @@ class _ConverterPageState extends State<ConverterPage> {
               Stack(
                 alignment: AlignmentDirectional.centerEnd,
                 children: [
-                  const Divider(
+                  Divider(
+                    color: dark ? Colors.white38 : Colors.black38,
                     thickness: 2,
                     height: 80,
                   ),
@@ -244,11 +248,13 @@ class _ConverterPageState extends State<ConverterPage> {
                       Container(
                         height: 53,
                         width: 53,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadiusDirectional.all(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadiusDirectional.all(
                             Radius.circular(53),
                           ),
-                          color: Color.fromRGBO(18, 18, 35, 1),
+                          color: dark
+                              ? const Color.fromRGBO(18, 18, 35, 1)
+                              : Colors.white,
                         ),
                       ),
                       CupertinoButton(
@@ -321,8 +327,10 @@ class _ConverterPageState extends State<ConverterPage> {
                                         return Center(
                                           child: Text(
                                             data.list()[index],
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                            style: TextStyle(
+                                              color: dark
+                                                  ? Colors.white
+                                                  : Colors.black,
                                             ),
                                           ),
                                         );
@@ -333,8 +341,8 @@ class _ConverterPageState extends State<ConverterPage> {
                               },
                               child: Text(
                                 data.list()[_listIndex2],
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: dark ? Colors.white : Colors.black,
                                 ),
                               ),
                             ),
@@ -348,8 +356,11 @@ class _ConverterPageState extends State<ConverterPage> {
                           height: 230,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: CupertinoColors
-                                .tertiarySystemGroupedBackground.darkColor,
+                            color: dark
+                                ? CupertinoColors
+                                    .tertiarySystemGroupedBackground.darkColor
+                                : CupertinoColors
+                                    .tertiarySystemGroupedBackground.color,
                             border: Border.all(
                               width: 0,
                               color: Colors.transparent,
@@ -365,6 +376,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   NumpadButton(
+                                    dark: dark,
                                     number: 1,
                                     buttonClicked: () {
                                       _numkeyPressed(
@@ -376,6 +388,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                     },
                                   ),
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         "2",
@@ -387,6 +400,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                     number: 2,
                                   ),
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         "3",
@@ -404,6 +418,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         "4",
@@ -415,6 +430,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                     number: 4,
                                   ),
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         "5",
@@ -426,6 +442,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                     number: 5,
                                   ),
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         "6",
@@ -443,6 +460,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         '7',
@@ -454,6 +472,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                     number: 7,
                                   ),
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         "8",
@@ -465,6 +484,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                     number: 8,
                                   ),
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       _numkeyPressed(
                                         "9",
@@ -501,8 +521,10 @@ class _ConverterPageState extends State<ConverterPage> {
                                           (quantityName == "Temperature")
                                               ? "./-"
                                               : ".",
-                                          style: const TextStyle(
-                                            color: CupertinoColors.white,
+                                          style: TextStyle(
+                                            color: dark
+                                                ? CupertinoColors.white
+                                                : CupertinoColors.black,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 22,
                                           ),
@@ -529,6 +551,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                     ),
                                   ),
                                   NumpadButton(
+                                    dark: dark,
                                     buttonClicked: () {
                                       if (_textFieldText.isNotEmpty) {
                                         _numkeyPressed(
@@ -543,20 +566,33 @@ class _ConverterPageState extends State<ConverterPage> {
                                   ),
                                   SizedBox(
                                     width: 123,
-                                    child: CupertinoButton(
-                                      padding: const EdgeInsets.all(3.0),
-                                      child: const Icon(
-                                        CupertinoIcons.delete_left,
-                                        color: CupertinoColors.white,
-                                        size: 22,
-                                      ),
-                                      onPressed: () {
-                                        _backspacePressed(
-                                          data.list()[_listIndex1],
-                                          data.list()[_listIndex2],
-                                          data.quantityName,
-                                        );
+                                    child: GestureDetector(
+                                      onLongPress: () {
+                                        while (true) {
+                                          _backspacePressed(
+                                            data.list()[_listIndex1],
+                                            data.list()[_listIndex2],
+                                            data.quantityName,
+                                          );
+                                        }
                                       },
+                                      child: CupertinoButton(
+                                        padding: const EdgeInsets.all(3.0),
+                                        child: Icon(
+                                          CupertinoIcons.delete_left,
+                                          color: dark
+                                              ? CupertinoColors.white
+                                              : CupertinoColors.black,
+                                          size: 22,
+                                        ),
+                                        onPressed: () {
+                                          _backspacePressed(
+                                            data.list()[_listIndex1],
+                                            data.list()[_listIndex2],
+                                            data.quantityName,
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ],

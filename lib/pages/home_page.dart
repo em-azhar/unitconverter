@@ -12,15 +12,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool _dark = true;
   @override
   Widget build(BuildContext context) {
+    Color bgColor = _dark
+        ? const Color.fromARGB(215, 26, 28, 59)
+        : const Color.fromARGB(53, 158, 158, 158);
+
     return Scaffold(
       body: Container(
         constraints: const BoxConstraints.expand(),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              "assets/images/bg.png",
+              (_dark)
+                  ? "assets/images/bg_dark.png"
+                  : "assets/images/bg_light.png",
             ),
             fit: BoxFit.cover,
           ),
@@ -85,6 +92,7 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             QuantityButton(
+                              bgColor: bgColor,
                               icon: const AssetImage("assets/icons/area.png"),
                               quantityName: "Area",
                               textColor: const Color.fromRGBO(124, 83, 254, 1),
@@ -92,14 +100,16 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => const ConverterPage(
+                                    builder: (context) => ConverterPage(
                                       quantityName: "Area",
+                                      dark: _dark,
                                     ),
                                   ),
                                 );
                               },
                             ),
                             QuantityButton(
+                              bgColor: bgColor,
                               icon: const AssetImage("assets/icons/time.png"),
                               quantityName: "Time",
                               textColor: const Color.fromRGBO(255, 63, 191, 1),
@@ -107,8 +117,9 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => const ConverterPage(
+                                    builder: (context) => ConverterPage(
                                       quantityName: "Time",
+                                      dark: _dark,
                                     ),
                                   ),
                                 );
@@ -120,6 +131,7 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             QuantityButton(
+                              bgColor: bgColor,
                               icon: const AssetImage("assets/icons/volume.png"),
                               quantityName: "Volume",
                               textColor: const Color.fromRGBO(255, 136, 54, 1),
@@ -127,14 +139,16 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => const ConverterPage(
+                                    builder: (context) => ConverterPage(
                                       quantityName: "Volume",
+                                      dark: _dark,
                                     ),
                                   ),
                                 );
                               },
                             ),
                             QuantityButton(
+                              bgColor: bgColor,
                               icon: const AssetImage(
                                   "assets/icons/temperature.png"),
                               quantityName: "Temperature",
@@ -143,8 +157,9 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => const ConverterPage(
+                                    builder: (context) => ConverterPage(
                                       quantityName: "Temperature",
+                                      dark: _dark,
                                     ),
                                   ),
                                 );
@@ -156,6 +171,7 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             QuantityButton(
+                              bgColor: bgColor,
                               icon: const AssetImage("assets/icons/length.png"),
                               quantityName: "Length",
                               textColor: const Color.fromRGBO(51, 169, 191, 1),
@@ -163,14 +179,16 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => const ConverterPage(
+                                    builder: (context) => ConverterPage(
                                       quantityName: "Length",
+                                      dark: _dark,
                                     ),
                                   ),
                                 );
                               },
                             ),
                             QuantityButton(
+                              bgColor: bgColor,
                               icon: const AssetImage("assets/icons/speed.png"),
                               quantityName: "Speed",
                               textColor: const Color.fromRGBO(46, 222, 97, 1),
@@ -178,8 +196,9 @@ class _HomeState extends State<Home> {
                                 Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                    builder: (context) => const ConverterPage(
+                                    builder: (context) => ConverterPage(
                                       quantityName: "Speed",
+                                      dark: _dark,
                                     ),
                                   ),
                                 );
@@ -191,6 +210,20 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20, right: 35),
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: CupertinoSwitch(
+                      value: _dark,
+                      onChanged: (value) {
+                        setState(() {
+                          _dark = value;
+                        });
+                      },
+                    ),
+                  ),
+                )
               ],
             ),
           ),

@@ -5,6 +5,7 @@ class QuantityButton extends StatelessWidget {
   final AssetImage icon;
   final String quantityName;
   final Color textColor;
+  final Color bgColor;
 
   const QuantityButton({
     Key? key,
@@ -12,6 +13,7 @@ class QuantityButton extends StatelessWidget {
     required this.quantityName,
     required this.textColor,
     required this.onPressed,
+    required this.bgColor,
   }) : super(key: key);
 
   @override
@@ -22,9 +24,9 @@ class QuantityButton extends StatelessWidget {
       child: Container(
         height: 150,
         width: 130,
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(215, 26, 28, 59),
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: const BorderRadius.all(
             Radius.circular(20),
           ),
         ),

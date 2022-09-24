@@ -64,5 +64,6 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/converterpage_backgrounds/
+    - assets/converterpage_backgrounds_light/
+    - assets/converterpage_backgrounds_dark/
     - assets/audio/

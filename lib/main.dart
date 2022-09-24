@@ -6,7 +6,7 @@ void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      darkTheme: ThemeData.dark(),
+      // darkTheme: ThemeData.dark(),
       scrollBehavior: ScrollGlow(),
       home: const MyApp(),
     ),
