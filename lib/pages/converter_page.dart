@@ -190,7 +190,7 @@ class _ConverterPageState extends State<ConverterPage> {
                           );
                           _showSlider(
                             CupertinoPicker(
-                              looping: true,
+                              looping: false,
                               itemExtent: 45,
                               scrollController: scrollController1,
                               onSelectedItemChanged: (int selectedItem) {
@@ -231,16 +231,56 @@ class _ConverterPageState extends State<ConverterPage> {
                   ],
                 ),
               ),
-              const Divider(
-                thickness: 2,
-                height: 80,
+              Stack(
+                alignment: AlignmentDirectional.centerEnd,
+                children: [
+                  const Divider(
+                    thickness: 2,
+                    height: 80,
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Container(
+                        height: 53,
+                        width: 53,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadiusDirectional.all(
+                            Radius.circular(53),
+                          ),
+                          color: Color.fromRGBO(18, 18, 35, 1),
+                        ),
+                      ),
+                      CupertinoButton(
+                        child: Icon(
+                          CupertinoIcons.arrow_up_arrow_down_circle_fill,
+                          size: 50,
+                          color: data.quantityNameColor(),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            int temp = _listIndex1;
+                            _listIndex1 = _listIndex2;
+                            _listIndex2 = temp;
+                            _numkeyPressed(
+                              "",
+                              data.list()[_listIndex1],
+                              data.list()[_listIndex2],
+                              data.quantityName,
+                            );
+                          });
+                        },
+                      ),
+                    ],
+                  )
+                ],
               ),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         children: [
                           Center(
@@ -262,7 +302,7 @@ class _ConverterPageState extends State<ConverterPage> {
                                 _showSlider(
                                   CupertinoPicker(
                                     scrollController: scrollController2,
-                                    looping: true,
+                                    looping: false,
                                     itemExtent: 45,
                                     onSelectedItemChanged: (int selectedItem) {
                                       setState(() {
