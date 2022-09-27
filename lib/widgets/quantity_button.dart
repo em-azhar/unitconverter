@@ -1,12 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 class QuantityButton extends StatelessWidget {
-  final VoidCallback onPressed;
-  final AssetImage icon;
-  final String quantityName;
-  final Color textColor;
-  final Color bgColor;
-
   const QuantityButton({
     Key? key,
     required this.icon,
@@ -15,6 +9,12 @@ class QuantityButton extends StatelessWidget {
     required this.onPressed,
     required this.bgColor,
   }) : super(key: key);
+
+  final VoidCallback onPressed;
+  final AssetImage icon;
+  final String quantityName;
+  final Color textColor;
+  final Color bgColor;
 
   @override
   Widget build(BuildContext context) {

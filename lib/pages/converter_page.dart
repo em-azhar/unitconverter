@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:unitconverter/calculations/conversion.dart';
 import 'package:unitconverter/model/data.dart';
 
@@ -87,6 +90,7 @@ class _ConverterPageState extends State<ConverterPage> {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (context) => CupertinoActionSheet(
+        color: widget.dark ? Colors.black : Colors.white,
         actions: [
           Container(
             height: 216,
@@ -94,9 +98,9 @@ class _ConverterPageState extends State<ConverterPage> {
             margin: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            color: CupertinoColors.systemBackground.resolveFrom(
-              context,
-            ),
+            color: widget.dark
+                ? CupertinoColors.systemBackground.darkColor
+                : CupertinoColors.systemBackground.color,
             child: SafeArea(
               top: false,
               child: child,
@@ -568,11 +572,14 @@ class _ConverterPageState extends State<ConverterPage> {
                                     width: 123,
                                     child: GestureDetector(
                                       onLongPress: () {
-                                        while (true) {
+                                        while (_textFieldText.isNotEmpty) {
                                           _backspacePressed(
                                             data.list()[_listIndex1],
                                             data.list()[_listIndex2],
                                             data.quantityName,
+                                          );
+                                          sleep(
+                                            const Duration(milliseconds: 200),
                                           );
                                         }
                                       },
