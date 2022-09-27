@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:unitconverter/calculations/conversion.dart';
 import 'package:unitconverter/model/data.dart';
 
 import '../widgets/numpad_button.dart';
+import '../widgets/custom_dialog.dart';
 
 class ConverterPage extends StatefulWidget {
   final String quantityName;
@@ -89,8 +89,8 @@ class _ConverterPageState extends State<ConverterPage> {
   void _showSlider(Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
-      builder: (context) => CupertinoActionSheet(
-        color: widget.dark ? Colors.black : Colors.white,
+      builder: (context) => CustomCupertinoActionSheet(
+        color: Colors.black,
         actions: [
           Container(
             height: 216,
