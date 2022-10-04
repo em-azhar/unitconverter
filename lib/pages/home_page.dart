@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
                           Navigator.push(
                             context,
                             CupertinoPageRoute(
-                              builder: (context) => Credit(),
+                              builder: (context) => Credit(dark: _dark,),
                             ),
                           );
                         },

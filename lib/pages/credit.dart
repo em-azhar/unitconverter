@@ -5,7 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Credit extends StatelessWidget {
-  Credit({Key? key}) : super(key: key);
+  Credit({
+    Key? key,
+    required this.dark,
+  }) : super(key: key);
+
+  final bool dark;
 
   final Uri _instagram = Uri.parse("https://instagram.com/thisizazhar/");
   final Uri _facebook = Uri.parse("https://facebook.com/thisizazhar/");
@@ -19,19 +24,25 @@ class Credit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color textColor = dark ? Colors.white : Colors.black;
+
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(18, 18, 35, 1),
+      backgroundColor:
+          dark ? const Color.fromRGBO(18, 18, 35, 1) : Colors.white,
       appBar: AppBar(
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(top: 16, right: 10),
-            child: Text("ver 0.1"),
+            padding: const EdgeInsets.only(top: 16, right: 10),
+            child: Text(
+              "ver 0.1",
+              style: TextStyle(color: textColor),
+            ),
           ),
         ],
         leading: CupertinoButton(
-          child: const Icon(
+          child: Icon(
             CupertinoIcons.back,
-            color: Colors.white,
+            color: textColor,
             size: 25,
           ),
           onPressed: () {
@@ -47,20 +58,20 @@ class Credit extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              children: const [
+              children: [
                 Text(
                   "Hello, World! 👋",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: textColor,
                     fontSize: 30,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: Text(
                     "Programmed & Created by",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: textColor,
                       fontSize: 17,
                     ),
                   ),
@@ -68,7 +79,7 @@ class Credit extends StatelessWidget {
                 Text(
                   "Azhar",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: textColor,
                     fontSize: 25,
                   ),
                 ),
@@ -76,35 +87,35 @@ class Credit extends StatelessWidget {
             ),
             Column(
               children: [
-                const Text(
+                Text(
                   "   Consider Following!   😊",
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: textColor),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CupertinoButton(
-                      child: const Icon(
+                      child: Icon(
                         FontAwesomeIcons.instagram,
-                        color: Colors.white,
+                        color: textColor,
                       ),
                       onPressed: () {
                         _openLinks(_instagram);
                       },
                     ),
                     CupertinoButton(
-                      child: const Icon(
+                      child: Icon(
                         FontAwesomeIcons.facebook,
-                        color: Colors.white,
+                        color: textColor,
                       ),
                       onPressed: () {
                         _openLinks(_facebook);
                       },
                     ),
                     CupertinoButton(
-                      child: const Icon(
+                      child: Icon(
                         FontAwesomeIcons.github,
-                        color: Colors.white,
+                        color: textColor,
                       ),
                       onPressed: () {
                         _openLinks(_github);
